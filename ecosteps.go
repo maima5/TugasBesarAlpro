@@ -31,7 +31,7 @@ var daftarKategori = [10]Kategori{
 	{"Menanam hidroponik", 18},
 	{"Menanam pohon", 25},
 }
-
+//apapunn
 func main() {
 	var pilihan int
 	selesai := false
