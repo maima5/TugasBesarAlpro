@@ -22,12 +22,6 @@ func tampilanAwal() {
 	fmt.Println("\033[0m") // Reset warna
 }
 
-// (Fungsi menuUtama tetap seperti sebelumnya dengan dekorasi dan warna)
-
-// Selanjutnya, setiap fungsi seperti tentangEcoSteps(), tambahAktivitas(),
-// tampilkanAktivitas(), editAktivitas(), dan lainnya akan dibungkus dengan
-// border yang konsisten seperti ini:
-
 func tentangEcoSteps() {
 	fmt.Println("\033[32m")
 	fmt.Println("╔════════════════════════════════════════════════════════════════════╗")
@@ -40,8 +34,3 @@ func tentangEcoSteps() {
 	fmt.Println("\033[0m")
 }
 
-// dst. untuk semua fungsi lain...
-
-// Jika Anda ingin saya menyusun ulang SELURUH FILE secara menyeluruh dengan
-// semua fungsi dihias seperti ini, beri konfirmasi agar saya lanjutkan
-// mengubah semuanya secara penuh dan kirimkan hasil akhirnya sebagai file .go.
