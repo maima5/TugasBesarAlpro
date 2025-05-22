@@ -47,19 +47,21 @@ func main() {
 	}
 }
 func tampilanAwal() {
-	fmt.Println("\n\n==================================================")
-	fmt.Println("              🌱  SELAMAT DATANG  🌱             ")
-	fmt.Println("              Ｅ ｃ ｏ Ｓ ｔ ｅ ｐ ｓ               ")
-	fmt.Println("         Pelacak Gaya Hidup Ramah Lingkungan       ")
-	fmt.Println("---------------------------------------------------")
-	fmt.Println("          Algoritma & Pemrograman 2 - 2025         ")
-	fmt.Println("   Dibuat oleh: Husnul Khotimah & Nailah Dhiyah")
-	fmt.Println("==================================================")
-	fmt.Println("1. Mulai Aplikasi")
-	fmt.Println("2. Tentang EcoSteps")
-	fmt.Println("3. Keluar")
-	fmt.Println("---------------------------------------------------")
-	fmt.Print("Pilihan anda: ")
+	fmt.Println("\033[32m") // Warna hijau
+	fmt.Println("╔═══════════════════════════════════════════════════════════════════╗")
+	fmt.Println("║                        🌱 SELAMAT DATANG                          ║")
+	fmt.Println("║                        Ｅ ｃ ｏ Ｓ ｔ ｅ ｐ ｓ                     ║")
+	fmt.Println("║              Pelacak Gaya Hidup Ramah Lingkungan                   ║")
+	fmt.Println("╠════════════════════════════════════════════════════════════════════╣")
+	fmt.Println("║      Algoritma & Pemrograman 2 - 2025                              ║")
+	fmt.Println("║      Dibuat oleh: Husnul Khotimah & Nailah Dhiyah                  ║")
+	fmt.Println("╚════════════════════════════════════════════════════════════════════╝")
+	fmt.Println("║ > 1. Mulai Aplikasi                                                ║")
+	fmt.Println("║ > 2. Tentang EcoSteps                                              ║")
+	fmt.Println("║ > 3. Keluar                                                        ║")
+	fmt.Println("╚════════════════════════════════════════════════════════════════════╝")
+	fmt.Print("🌿 Pilihan anda ➤ ")
+	fmt.Println("\033[0m") // Reset warna
 }
 func menuUtama() {
 	var daftarAktivitas [MaksData]Aktivitas
@@ -73,7 +75,7 @@ func menuUtama() {
 		fmt.Println("3. Edit Aktivitas Berdasarkan Tanggal")
 		fmt.Println("4. Hapus Aktivitas Berdasarkan Tanggal")
 		fmt.Println("5. Cari Aktivitas")
-		fmt.Println("6. daftarkan Aktivitas")
+		fmt.Println("6. Urutkan Aktivitas")
 		fmt.Println("7. Laporan Bulanan")
 		fmt.Println("8. Keluar")
 		fmt.Print("Pilih menu: ")
@@ -137,10 +139,15 @@ func menuUtama() {
 }
 
 func tentangEcoSteps() {
-	fmt.Println("\n\n========== Tentang EcoSteps ==========")
-	fmt.Println("EcoSteps adalah aplikasi pelacak gaya hidup ramah lingkungan.")
-	fmt.Println("Dengan aplikasi ini, Anda dapat memantau aktivitas sehari-hari,")
-	fmt.Println("menghitung skor keberlanjutan, dan melihat laporan bulanan 🌿")
+	fmt.Println("\033[32m")
+	fmt.Println("╔════════════════════════════════════════════════════════════════════╗")
+	fmt.Println("║                    📖 TENTANG APLIKASI ECOSTEPS                   ║")
+	fmt.Println("╠════════════════════════════════════════════════════════════════════╣")
+	fmt.Println("║ EcoSteps adalah aplikasi pelacak gaya hidup ramah lingkungan.     ║")
+	fmt.Println("║ Dengan aplikasi ini, Anda dapat memantau aktivitas sehari-hari,   ║")
+	fmt.Println("║ menghitung skor keberlanjutan, dan melihat laporan bulanan. 🌿   ║")
+	fmt.Println("╚════════════════════════════════════════════════════════════════════╝")
+	fmt.Println("\033[0m")
 }
 func aktivitas(kategori [10]Kategori) {
 	var i int
@@ -192,7 +199,7 @@ func tampilkanAktivitas(daftar [MaksData]Aktivitas, jumlah int) {
 	var i int
 	fmt.Println("\n=== Daftar Semua Aktivitas ===")
 	for i = 0; i < jumlah; i++ {
-		fmt.Printf("%d. Tanggal: %s | Aktivitas: %s | Skor: %d\n",
+		fmt.Printf("%2d. Tanggal: %-12s | Aktivitas: %-40s | Skor: %d\n",
 			i+1, daftar[i].tanggal, daftar[i].nama, daftar[i].skorDampak)
 	}
 }
@@ -251,7 +258,7 @@ func editAktivitas(daftar *[MaksData]Aktivitas, jumlah int, kategori *[10]Katego
 		fmt.Scan(&pilihanAktivitas)
 
 		if pilihanAktivitas >= 1 && pilihanAktivitas <= totalDitemukan {
-			fmt.Println("Pilih aktivitas baru:")
+			fmt.Println("\nPilih aktivitas baru:")
 			aktivitas(*kategori)
 
 			var pilihanKategori int
@@ -274,6 +281,7 @@ func editAktivitas(daftar *[MaksData]Aktivitas, jumlah int, kategori *[10]Katego
 
 func hapusAktivitas(daftar *[MaksData]Aktivitas, jumlah *int) {
 	var tanggal string
+	tampilkanTanggalUnik(*daftar, *jumlah)
 	fmt.Print("Masukkan tanggal aktivitas yang ingin dihapus (format: YYYY-MM-DD): ")
 	fmt.Scan(&tanggal)
 	var indeksAktivitas [MaksData]int
@@ -314,13 +322,13 @@ func cariAktivitas(daftar [MaksData]Aktivitas, jumlah int) {
 	var keyword string
 	var ditemukan bool = false
 	var i int
+	tampilkanTanggalUnik(daftar, jumlah)
 	fmt.Println("\n=== Cari Aktivitas ===")
 	fmt.Print("Masukkan kata kunci (tanggal aktivitas): ")
 	fmt.Scanln(&keyword)
 	fmt.Scanln(&keyword)
-
+	fmt.Println("\nHasil pencarian:")
 	for i = 0; i < jumlah; i++ {
-		fmt.Println("\nHasil pencarian:")
 		if daftar[i].tanggal == keyword {
 			ditemukan = true
 			fmt.Printf("- %s | %s | Skor: %d\n",
@@ -523,12 +531,13 @@ func sortSkor(daftar *[MaksData]Aktivitas, jumlah int) {
 }
 func laporanBulanan(daftar [MaksData]Aktivitas, jumlah int) {
 	var i int
-	var bulanSekarang string = daftar[i].tanggal[:7]
+	var bulanSekarang string
 	var bulanSebelumnya string
 	var totalSkor, totalAktivitas int
 	if jumlah != 0 {
 		fmt.Println("\n===== LAPORAN BULANAN =====")
 		for i = 0; i < jumlah; i++ {
+			bulanSekarang = daftar[i].tanggal[:7]
 			if bulanSekarang != bulanSebelumnya && i != 0 {
 				fmt.Printf("📅 Bulan: %s - Total Aktivitas: %d - Total Skor: %d\n",
 					bulanSebelumnya, totalAktivitas, totalSkor)
