@@ -491,7 +491,6 @@ func sortFrekuensiDescend(daftar *[MaksData]Aktivitas, jumlah int) {
 	var i, j int
 	var sudahAda bool
 
-	// 1. Kumpulkan nama unik & frekuensinya
 	for i = 0; i < jumlah; i++ {
 		sudahAda = false
 		for j = 0; j < jumlahUnik; j++ {
@@ -506,7 +505,6 @@ func sortFrekuensiDescend(daftar *[MaksData]Aktivitas, jumlah int) {
 		}
 	}
 
-	// 2. Urutkan namaUnik berdasarkan frekuensi descending
 	var tempStr string
 	var tempInt int
 	for i = 0; i < jumlahUnik-1; i++ {
@@ -524,7 +522,6 @@ func sortFrekuensiDescend(daftar *[MaksData]Aktivitas, jumlah int) {
 		}
 	}
 
-	// 3. Susun daftar baru berdasarkan urutan nama unik
 	var hasil [MaksData]Aktivitas
 	var idx int = 0
 	for i = 0; i < jumlahUnik; i++ {
@@ -536,7 +533,6 @@ func sortFrekuensiDescend(daftar *[MaksData]Aktivitas, jumlah int) {
 		}
 	}
 
-	// 4. Copy kembali ke daftar asli
 	for i = 0; i < jumlah; i++ {
 		(*daftar)[i] = hasil[i]
 	}
@@ -549,7 +545,6 @@ func sortFrekuensiAscend(daftar *[MaksData]Aktivitas, jumlah int) {
 	var i, j int
 	var sudahAda bool
 
-	// 1. Kumpulkan nama unik & frekuensinya
 	for i = 0; i < jumlah; i++ {
 		sudahAda = false
 		for j = 0; j < jumlahUnik; j++ {
@@ -564,7 +559,6 @@ func sortFrekuensiAscend(daftar *[MaksData]Aktivitas, jumlah int) {
 		}
 	}
 
-	// 2. Urutkan namaUnik berdasarkan frekuensi descending
 	var tempStr string
 	var tempInt int
 	for i = 0; i < jumlahUnik-1; i++ {
@@ -582,7 +576,6 @@ func sortFrekuensiAscend(daftar *[MaksData]Aktivitas, jumlah int) {
 		}
 	}
 
-	// 3. Susun daftar baru berdasarkan urutan nama unik
 	var hasil [MaksData]Aktivitas
 	var idx int = 0
 	for i = 0; i < jumlahUnik; i++ {
@@ -594,7 +587,6 @@ func sortFrekuensiAscend(daftar *[MaksData]Aktivitas, jumlah int) {
 		}
 	}
 
-	// 4. Copy kembali ke daftar asli
 	for i = 0; i < jumlah; i++ {
 		(*daftar)[i] = hasil[i]
 	}
