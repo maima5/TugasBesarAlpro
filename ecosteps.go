@@ -446,20 +446,160 @@ func binarySearchPoin(daftar [MaksData]Aktivitas, jumlah int) {
 func sorting(daftar *[MaksData]Aktivitas, jumlah int) {
 	var sort string
 	fmt.Println("\n\n🔃 Pilih pengurutan berdasarkan:")
-	fmt.Println("    📅 Tanggal (t) atau 🟢 Skor Dampak (d)")
-	fmt.Print("🔽 Pilih (t/d): ")
+	fmt.Println("    📅 Tanggal (t) , Frekuensi (f), atau 🟢 Skor Dampak (d)")
+	fmt.Print("🔽 Pilih (t/f/d): ")
 	fmt.Scan(&sort)
-	for sort != "t" && sort != "d" {
+	for sort != "t" && sort != "f" && sort != "d" {
 		fmt.Println("⚠️ Input tidak valid. Coba lagi.")
-		fmt.Print("🔽 Pilih (t/d): ")
+		fmt.Print("🔽 Pilih (t/f/d): ")
 		fmt.Scan(&sort)
 	}
 	if sort == "t" {
 		sortTanggal(daftar, jumlah)
+	} else if sort == "f" {
+		sortFrekuensi(daftar, jumlah)
 	} else if sort == "d" {
 		sortSkor(daftar, jumlah)
 	}
 }
+func sortFrekuensi(daftar *[MaksData]Aktivitas, jumlah int) {
+	var urut string
+	fmt.Println("Pilih daftarkan frekuensi secara decending(d) atau ascending(a)")
+	fmt.Print("Pilih salah satu (d/a):")
+	fmt.Scan(&urut)
+	if urut == "d" {
+		sortFrekuensiDescend(daftar, jumlah)
+	} else if urut == "a" {
+		sortFrekuensiAscend(daftar, jumlah)
+	}
+	tampilkanAktivitas(*daftar, jumlah)
+	fmt.Println("✅ Aktivitas berhasil didaftarkan berdasarkan frekuensi aktivitas.")
+}
+func hitungFrekuensi(daftar [MaksData]Aktivitas, jumlah int, nama string) int {
+	var count, i int
+	for i = 0; i < jumlah; i++ {
+		if daftar[i].nama == nama {
+			count++
+		}
+	}
+	return count
+}
+func sortFrekuensiDescend(daftar *[MaksData]Aktivitas, jumlah int) {
+	var namaUnik [MaksData]string
+	var frekuensi [MaksData]int
+	var jumlahUnik int = 0
+	var i, j int
+	var sudahAda bool
+
+	// 1. Kumpulkan nama unik & frekuensinya
+	for i = 0; i < jumlah; i++ {
+		sudahAda = false
+		for j = 0; j < jumlahUnik; j++ {
+			if daftar[i].nama == namaUnik[j] {
+				sudahAda = true
+			}
+		}
+		if !sudahAda {
+			namaUnik[jumlahUnik] = daftar[i].nama
+			frekuensi[jumlahUnik] = hitungFrekuensi(*daftar, jumlah, daftar[i].nama)
+			jumlahUnik++
+		}
+	}
+
+	// 2. Urutkan namaUnik berdasarkan frekuensi descending
+	var tempStr string
+	var tempInt int
+	for i = 0; i < jumlahUnik-1; i++ {
+		for j = i + 1; j < jumlahUnik; j++ {
+			if frekuensi[i] < frekuensi[j] {
+				// Tukar
+				tempStr = namaUnik[i]
+				namaUnik[i] = namaUnik[j]
+				namaUnik[j] = tempStr
+
+				tempInt = frekuensi[i]
+				frekuensi[i] = frekuensi[j]
+				frekuensi[j] = tempInt
+			}
+		}
+	}
+
+	// 3. Susun daftar baru berdasarkan urutan nama unik
+	var hasil [MaksData]Aktivitas
+	var idx int = 0
+	for i = 0; i < jumlahUnik; i++ {
+		for j = 0; j < jumlah; j++ {
+			if daftar[j].nama == namaUnik[i] {
+				hasil[idx] = daftar[j]
+				idx++
+			}
+		}
+	}
+
+	// 4. Copy kembali ke daftar asli
+	for i = 0; i < jumlah; i++ {
+		(*daftar)[i] = hasil[i]
+	}
+}
+
+func sortFrekuensiAscend(daftar *[MaksData]Aktivitas, jumlah int) {
+	var namaUnik [MaksData]string
+	var frekuensi [MaksData]int
+	var jumlahUnik int = 0
+	var i, j int
+	var sudahAda bool
+
+	// 1. Kumpulkan nama unik & frekuensinya
+	for i = 0; i < jumlah; i++ {
+		sudahAda = false
+		for j = 0; j < jumlahUnik; j++ {
+			if daftar[i].nama == namaUnik[j] {
+				sudahAda = true
+			}
+		}
+		if !sudahAda {
+			namaUnik[jumlahUnik] = daftar[i].nama
+			frekuensi[jumlahUnik] = hitungFrekuensi(*daftar, jumlah, daftar[i].nama)
+			jumlahUnik++
+		}
+	}
+
+	// 2. Urutkan namaUnik berdasarkan frekuensi descending
+	var tempStr string
+	var tempInt int
+	for i = 0; i < jumlahUnik-1; i++ {
+		for j = i + 1; j < jumlahUnik; j++ {
+			if frekuensi[i] > frekuensi[j] {
+				// Tukar
+				tempStr = namaUnik[i]
+				namaUnik[i] = namaUnik[j]
+				namaUnik[j] = tempStr
+
+				tempInt = frekuensi[i]
+				frekuensi[i] = frekuensi[j]
+				frekuensi[j] = tempInt
+			}
+		}
+	}
+
+	// 3. Susun daftar baru berdasarkan urutan nama unik
+	var hasil [MaksData]Aktivitas
+	var idx int = 0
+	for i = 0; i < jumlahUnik; i++ {
+		for j = 0; j < jumlah; j++ {
+			if daftar[j].nama == namaUnik[i] {
+				hasil[idx] = daftar[j]
+				idx++
+			}
+		}
+	}
+
+	// 4. Copy kembali ke daftar asli
+	for i = 0; i < jumlah; i++ {
+		(*daftar)[i] = hasil[i]
+	}
+}
+
 func sortTanggal(daftar *[MaksData]Aktivitas, jumlah int) {
 	var urut string
 	fmt.Println("Pilih daftarkan tanggal secara decending(d) atau ascending(a)")
@@ -534,7 +674,6 @@ func sortSkorAscend(daftar *[MaksData]Aktivitas, jumlah int) {
 		}
 		(*daftar)[j+1] = temp
 	}
-
 }
 func sortSkorDescend(daftar *[MaksData]Aktivitas, jumlah int) {
 	var i, j, idx int
@@ -576,13 +715,13 @@ func laporanBulanan(daftar [MaksData]Aktivitas, jumlah int) {
 	}
 }
 func dummyData(daftar *[MaksData]Aktivitas, jumlah *int) {
-	daftar[*jumlah] = Aktivitas{2025, 5, 20, "Membuang sampah pada tempatnya", 6}
+	daftar[*jumlah] = Aktivitas{2025, 5, 21, "Membuang sampah pada tempatnya", 6}
 	*jumlah++
 	daftar[*jumlah] = Aktivitas{2025, 5, 21, "Menanam pohon", 15}
 	*jumlah++
 	daftar[*jumlah] = Aktivitas{2025, 5, 21, "Membawa tumbler", 7}
 	*jumlah++
-	daftar[*jumlah] = Aktivitas{2025, 6, 1, "Menggunakan energi terbarukan", 14}
+	daftar[*jumlah] = Aktivitas{2025, 6, 2, "Menggunakan energi terbarukan", 14}
 	*jumlah++
 	daftar[*jumlah] = Aktivitas{2025, 6, 2, "Mengikuti kegiatan bersih-bersih lingkungan", 12}
 	*jumlah++
@@ -598,8 +737,8 @@ func dummyData(daftar *[MaksData]Aktivitas, jumlah *int) {
 	*jumlah++
 	daftar[*jumlah] = Aktivitas{2025, 7, 3, "Membawa tumbler", 7}
 	*jumlah++
-	daftar[*jumlah] = Aktivitas{2025, 7, 2, "Membuang sampah pada tempatnya", 6}
+	daftar[*jumlah] = Aktivitas{2025, 7, 3, "Membuang sampah pada tempatnya", 6}
 	*jumlah++
-	daftar[*jumlah] = Aktivitas{2025, 7, 2, "Membawa tumbler", 7}
+	daftar[*jumlah] = Aktivitas{2025, 7, 3, "Membawa tumbler", 7}
 	*jumlah++
 }
