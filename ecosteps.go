@@ -510,7 +510,7 @@ func sortFrekuensiDescend(daftar *[MaksData]Aktivitas, jumlah int) {
 	for i = 0; i < jumlahUnik-1; i++ {
 		for j = i + 1; j < jumlahUnik; j++ {
 			if frekuensi[i] < frekuensi[j] {
-				// Tukar
+				
 				tempStr = namaUnik[i]
 				namaUnik[i] = namaUnik[j]
 				namaUnik[j] = tempStr
@@ -564,7 +564,7 @@ func sortFrekuensiAscend(daftar *[MaksData]Aktivitas, jumlah int) {
 	for i = 0; i < jumlahUnik-1; i++ {
 		for j = i + 1; j < jumlahUnik; j++ {
 			if frekuensi[i] > frekuensi[j] {
-				// Tukar
+			
 				tempStr = namaUnik[i]
 				namaUnik[i] = namaUnik[j]
 				namaUnik[j] = tempStr
