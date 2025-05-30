@@ -484,13 +484,14 @@ func hitungFrekuensi(daftar [MaksData]Aktivitas, jumlah int, nama string) int {
 	}
 	return count
 }
+	
 func sortFrekuensiDescend(daftar *[MaksData]Aktivitas, jumlah int) {
 	var namaUnik [MaksData]string
 	var frekuensi [MaksData]int
 	var jumlahUnik int = 0
 	var i, j int
 	var sudahAda bool
-
+//kelompokin nama unik sm freqnya
 	for i = 0; i < jumlah; i++ {
 		sudahAda = false
 		for j = 0; j < jumlahUnik; j++ {
@@ -504,7 +505,7 @@ func sortFrekuensiDescend(daftar *[MaksData]Aktivitas, jumlah int) {
 			jumlahUnik++
 		}
 	}
-
+//diurutkan trs dituker
 	var tempStr string
 	var tempInt int
 	for i = 0; i < jumlahUnik-1; i++ {
@@ -521,7 +522,7 @@ func sortFrekuensiDescend(daftar *[MaksData]Aktivitas, jumlah int) {
 			}
 		}
 	}
-
+//susuan daftarbaru bd urutan kelompok nama unik
 	var hasil [MaksData]Aktivitas
 	var idx int = 0
 	for i = 0; i < jumlahUnik; i++ {
@@ -532,7 +533,7 @@ func sortFrekuensiDescend(daftar *[MaksData]Aktivitas, jumlah int) {
 			}
 		}
 	}
-
+//copy ke array daftar
 	for i = 0; i < jumlah; i++ {
 		(*daftar)[i] = hasil[i]
 	}
