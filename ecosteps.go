@@ -232,17 +232,17 @@ func tampilkanTanggalUnik(daftar [MaksData]Aktivitas, jumlah int) {
 	fmt.Println("╠══════════════════════════════════════════════════════════════════════╣")
 
 	for i = 0; i < jumlah; i++ {
-		arrdate[i] = tanggal(daftar, i) // Mengonversi tanggal ke angka
+		arrdate[i] = tanggal(daftar, i) 
 	}
 	for i = 0; i < jumlah; i++ {
 		sudahAda = false
 		for j = 0; j < jumlahTanggalUnik; j++ {
-			if arrdate[i] == tanggalUnik[j] { // Cek apakah tanggal sudah ada di tanggalUnik
+			if arrdate[i] == tanggalUnik[j] { 
 				sudahAda = true
 			}
 		}
 
-		// Jika tanggal belum ada, simpan ke tanggalUnik
+		
 		if !sudahAda {
 			tanggalUnik[jumlahTanggalUnik] = arrdate[i]
 			jumlahTanggalUnik++
@@ -252,11 +252,11 @@ func tampilkanTanggalUnik(daftar [MaksData]Aktivitas, jumlah int) {
 	if jumlahTanggalUnik == 0 {
 		fmt.Printf("║ %-68s ║\n", "⚠️  Belum ada aktivitas yang tercatat.")
 	} else {
-		// Menampilkan tanggal unik yang ditemukan
+		
 		for i = 0; i < jumlahTanggalUnik; i++ {
 			fmt.Printf("║ 🔹 %d/%d/%d ║\n",
-				(tanggalUnik[i] / 10000),   // Menampilkan Tahun
-				(tanggalUnik[i]%10000)/100, // Menampilkan Bulan
+				(tanggalUnik[i] / 10000),   
+				(tanggalUnik[i]%10000)/100, 
 				tanggalUnik[i]%100)
 		}
 	}
