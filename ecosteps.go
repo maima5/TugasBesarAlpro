@@ -1,6 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+	"os/exec"
+	"runtime"
+)
 
 type Aktivitas struct {
 	year, month, day int
@@ -12,9 +17,12 @@ type Kategori struct {
 	skorDampak int
 }
 
-const MaksData = 100
+const MaksData int = 100
 
-var daftarKategori = [10]Kategori{
+type arraktivitas [MaksData]Aktivitas
+type arrkat [10]Kategori
+
+var daftarKategori = arrkat{
 	{"Membuang sampah pada tempatnya", 6},
 	{"Membawa tumbler", 7},
 	{"Menyumbang barang layak pakai", 8},
@@ -27,13 +35,31 @@ var daftarKategori = [10]Kategori{
 	{"Menanam pohon", 15},
 }
 
+func refreshTampilan(daftar arraktivitas, jumlah int, showMessage string) {
+	cls()
+	tampilkanAktivitas(daftar, jumlah)
+	if showMessage != "" {
+		fmt.Println("\n", showMessage)
+	}
+}
+func cls() {
+	var cmd *exec.Cmd
+	if runtime.GOOS == "windows" {
+		cmd = exec.Command("cmd", "/c", "cls")
+	} else {
+		cmd = exec.Command("clear")
+	}
+	cmd.Stdout = os.Stdout
+	_ = cmd.Run()
+}
+
 func main() {
 	var pilihan int
 	var selesai bool = false
 	for !selesai {
 		tampilanAwal()
 		fmt.Scan(&pilihan)
-
+		cls()
 		if pilihan == 1 {
 			menuUtama()
 		} else if pilihan == 2 {
@@ -46,63 +72,62 @@ func main() {
 		}
 	}
 }
+
 func tampilanAwal() {
+	cls()
 	fmt.Println("\033[32m") // Warna hijau
 	fmt.Println("╔══════════════════════════════════════════════════════════════════════╗")
-	fmt.Println("║                        🌱 SELAMAT DATANG 🌱                          ║")
-	fmt.Println("║                          E C O S T E P S                             ║")
-	fmt.Println("║              🌿 Pelacak Gaya Hidup Ramah Lingkungan 🌿               ║")
+	fmt.Println("║                         🌱 SELAMAT DATANG 🌱                         ║")
+	fmt.Println("║                         Ｅ ｃ ｏ Ｓ ｔ ｅ ｐ ｓ                      ║")
+	fmt.Println("║                Pelacak Gaya Hidup Ramah Lingkungan 🌿                ║")
 	fmt.Println("╠══════════════════════════════════════════════════════════════════════╣")
 	fmt.Println("║  Algoritma & Pemrograman 2 - 2025                                    ║")
 	fmt.Println("║  Dibuat oleh: Husnul Khotimah & Nailah Dhiya                         ║")
 	fmt.Println("╠══════════════════════════════════════════════════════════════════════╣")
-	fmt.Println("║  ➤ 1. Mulai Aplikasi                                                 ║")
-	fmt.Println("║  ➤ 2. Tentang EcoSteps                                               ║")
-	fmt.Println("║  ➤ 3. Keluar                                                         ║")
+	fmt.Println("║  > 1. Mulai Aplikasi                                                 ║")
+	fmt.Println("║  > 2. Tentang EcoSteps                                               ║")
+	fmt.Println("║  > 3. Keluar                                                         ║")
 	fmt.Println("╚══════════════════════════════════════════════════════════════════════╝")
 	fmt.Print("🌿 Pilihan anda ➤ ")
-	fmt.Println("\033[0m")
+	fmt.Println("\033[0m") // Reset warna
 }
-
 func menuUtama() {
-	var daftarAktivitas [MaksData]Aktivitas
+	var daftarAktivitas arraktivitas
 	var jumlahData, pilihan int
 	var selesai bool
 	dummyData(&daftarAktivitas, &jumlahData)
+	tampilkanAktivitas(daftarAktivitas, jumlahData)
 	for !selesai {
 		fmt.Println("\033[32m") // Warna hijau
 		fmt.Println("╔══════════════════════════════════════════════════════════════════════╗")
 		fmt.Println("║                      📋  M E N U   U T A M A  📋                     ║")
 		fmt.Println("╠══════════════════════════════════════════════════════════════════════╣")
 		fmt.Println("║  📌 1. Tambah Aktivitas                                              ║")
-		fmt.Println("║  📄 2. Tampilkan Semua Aktivitas                                     ║")
-		fmt.Println("║  ✏️  3. Edit Aktivitas Berdasarkan Tanggal                            ║")
-		fmt.Println("║  ❌ 4. Hapus Aktivitas Berdasarkan Tanggal                           ║")
-		fmt.Println("║  🔍 5. Cari Aktivitas                                                ║")
-		fmt.Println("║  🔃 6. Urutkan Aktivitas                                             ║")
-		fmt.Println("║  📅 7. Laporan Bulanan                                               ║")
-		fmt.Println("║  🔙 8. Kembali ke Halaman Awal                                       ║")
+		fmt.Println("║  ✏️ 2. Edit Aktivitas Berdasarkan Tanggal                            ║")
+		fmt.Println("║  ❌ 3. Hapus Aktivitas Berdasarkan Tanggal                           ║")
+		fmt.Println("║  🔍 4. Cari Aktivitas                                                ║")
+		fmt.Println("║  🔃 5. Urutkan Aktivitas                                             ║")
+		fmt.Println("║  📅 6. Laporan Bulanan                                               ║")
+		fmt.Println("║  🔙 7. Kembali ke Halaman Awal                                       ║")
 		fmt.Println("╚══════════════════════════════════════════════════════════════════════╝")
 		fmt.Print("🌱 Pilihan anda ➤ ")
 		fmt.Println("\033[0m") // Reset warna
 
 		fmt.Scan(&pilihan)
-
+		cls()
 		if pilihan == 1 {
 			tambahAktivitas(&daftarAktivitas, &jumlahData, &daftarKategori)
 		} else if pilihan == 2 {
-			tampilkanAktivitas(daftarAktivitas, jumlahData)
-		} else if pilihan == 3 {
 			editAktivitas(&daftarAktivitas, jumlahData, daftarKategori)
-		} else if pilihan == 4 {
+		} else if pilihan == 3 {
 			hapusAktivitas(&daftarAktivitas, &jumlahData)
-		} else if pilihan == 5 {
+		} else if pilihan == 4 {
 			cari(daftarAktivitas, jumlahData)
-		} else if pilihan == 6 {
+		} else if pilihan == 5 {
 			sorting(&daftarAktivitas, jumlahData)
-		} else if pilihan == 7 {
+		} else if pilihan == 6 {
 			laporanBulanan(daftarAktivitas, jumlahData)
-		} else if pilihan == 8 {
+		} else if pilihan == 7 {
 			selesai = true
 		} else {
 			fmt.Println("⚠️ Pilihan tidak valid.")
@@ -111,6 +136,7 @@ func menuUtama() {
 }
 
 func tentangEcoSteps() {
+	var kembali string
 	fmt.Println("\033[32m") // Warna hijau
 	fmt.Println("╔══════════════════════════════════════════════════════════════════════╗")
 	fmt.Println("║                    📖 TENTANG APLIKASI ECOSTEPS                      ║")
@@ -119,10 +145,23 @@ func tentangEcoSteps() {
 	fmt.Println("║  Dengan aplikasi ini, Anda dapat memantau aktivitas sehari-hari,     ║")
 	fmt.Println("║  menghitung skor keberlanjutan, dan melihat laporan bulanan. 🌿      ║")
 	fmt.Println("╚══════════════════════════════════════════════════════════════════════╝")
+
+	fmt.Print("Ketik x untuk kembali ➤ ")
 	fmt.Println("\033[0m") // Reset warna
+	fmt.Scan(&kembali)
+	if kembali == "x" {
+		cls()
+	} else {
+		for kembali != "x" {
+			fmt.Println("\033[0m") // Reset warna
+			fmt.Print("Ketik x untuk kembali ➤ ")
+			fmt.Scan(&kembali)
+			fmt.Println("\033[0m") // Reset warna
+		}
+	}
 }
 
-func listKategori(kategori [10]Kategori) {
+func listKategori(kategori arrkat) {
 	var baris string
 	fmt.Println("\033[32m")
 	fmt.Println("╔══════════════════════════════════════════════════════════════════════╗")
@@ -135,77 +174,101 @@ func listKategori(kategori [10]Kategori) {
 	fmt.Println("╚══════════════════════════════════════════════════════════════════════╝")
 }
 
-func tambahAktivitas(daftar *[MaksData]Aktivitas, jumlah *int, kategori *[10]Kategori) {
+func tambahAktivitas(daftar *arraktivitas, jumlah *int, kategori *arrkat) {
 	var lanjutTanggal string = "y"
+	var inputTanggal string
 	var tahun, bulan, hari int
+	var selesai bool
 
-	for lanjutTanggal == "y" && *jumlah < MaksData {
-		fmt.Println("\033[32m")
-		fmt.Println("╔══════════════════════════════════════════════════════════════════════╗")
-		fmt.Println("║                    📅 Input Tanggal Aktivitas                        ║")
-		fmt.Println("╚══════════════════════════════════════════════════════════════════════╝")
-		fmt.Print("Tanggal (YYYY/MM/DD): ")
-		fmt.Println("\033[0m")
-		fmt.Scanf("\n%d/%d/%d", &tahun, &bulan, &hari)
-
-		var lanjutAktivitas string = "y"
-		for lanjutAktivitas == "y" && *jumlah < MaksData {
-			listKategori(*kategori)
-			fmt.Println("╔══════════════════════════════════════════════════════════════════════╗")
-			fmt.Printf("║ %-69s ║\n", "⚠️  Pilih hanya SATU aktivitas!")
-			fmt.Printf("║ %-69s ║\n", "➡️  Masukkan nomor aktivitas:")
-			fmt.Println("╚══════════════════════════════════════════════════════════════════════╝")
-			fmt.Print("🌿 ➤ ")
-			fmt.Println("\033[0m")
-
-			var pilihan int
-			fmt.Scanf("\n%d", &pilihan)
-
-			if pilihan >= 1 && pilihan <= len(*kategori) {
-				(*daftar)[*jumlah].year = tahun
-				(*daftar)[*jumlah].month = bulan
-				(*daftar)[*jumlah].day = hari
-				(*daftar)[*jumlah].nama = (*kategori)[pilihan-1].nama
-				(*daftar)[*jumlah].skorDampak = (*kategori)[pilihan-1].skorDampak
-				*jumlah++
-				fmt.Println("✅ Aktivitas berhasil ditambahkan.")
-			} else {
-				fmt.Println("⚠️ Nomor kategori tidak valid.")
-			}
-
-			if *jumlah < MaksData {
-				fmt.Println("\033[32m")
-				fmt.Println("╔══════════════════════════════════════════════════════════════════════╗")
-				fmt.Println("║        ➕ Tambah aktivitas lain untuk tanggal ini? (y/n)             ║")
-				fmt.Println("╚══════════════════════════════════════════════════════════════════════╝")
-				fmt.Print("🌿 Jawaban anda ➤ ")
-				fmt.Println("\033[0m")
-				fmt.Scanf("\n%s", &lanjutAktivitas)
-			} else {
-				fmt.Println("⚠️ Kapasitas data sudah penuh.")
-				lanjutAktivitas = "n"
-			}
-		}
-
-		if *jumlah < MaksData {
+	fmt.Println("\nKetik x untuk kembali.")
+	for !selesai {
+		for lanjutTanggal == "y" && *jumlah < MaksData && !selesai {
 			fmt.Println("\033[32m")
+
 			fmt.Println("╔══════════════════════════════════════════════════════════════════════╗")
-			fmt.Println("║        📅 Input aktivitas untuk tanggal lain? (y/n)                  ║")
+			fmt.Println("║                    📅 Input Tanggal Aktivitas                        ║")
 			fmt.Println("╚══════════════════════════════════════════════════════════════════════╝")
-			fmt.Print("🌿 Jawaban anda ➤ ")
+			fmt.Print("Tanggal (YYYY/MM/DD): ")
 			fmt.Println("\033[0m")
-			fmt.Scanf("\n%s", &lanjutTanggal)
+			fmt.Scan(&inputTanggal)
+
+			if inputTanggal == "x" {
+				selesai = true
+				refreshTampilan(*daftar, *jumlah, " ")
+			} else {
+				fmt.Sscanf(inputTanggal, "%d/%d/%d", &tahun, &bulan, &hari)
+				var lanjutAktivitas string = "y"
+				for lanjutAktivitas == "y" && *jumlah < MaksData && !selesai {
+					listKategori(*kategori)
+					fmt.Println("╔══════════════════════════════════════════════════════════════════════╗")
+					fmt.Printf("║ %-69s ║\n", "⚠️  Pilih hanya SATU aktivitas!")
+					fmt.Printf("║ %-69s ║\n", "➡️  Masukkan nomor aktivitas:")
+					fmt.Println("╚══════════════════════════════════════════════════════════════════════╝")
+					fmt.Print("🌿 ➤ ")
+					fmt.Println("\033[0m")
+
+					var pilihan int
+					fmt.Scanf("\n%d", &pilihan)
+
+					if pilihan >= 1 && pilihan <= len(*kategori) {
+						(*daftar)[*jumlah].year = tahun
+						(*daftar)[*jumlah].month = bulan
+						(*daftar)[*jumlah].day = hari
+						(*daftar)[*jumlah].nama = (*kategori)[pilihan-1].nama
+						(*daftar)[*jumlah].skorDampak = (*kategori)[pilihan-1].skorDampak
+						*jumlah++
+						fmt.Println("✅ Aktivitas berhasil ditambahkan.")
+					} else {
+						fmt.Println("⚠️ Nomor kategori tidak valid.")
+					}
+
+					if *jumlah < MaksData {
+						fmt.Println("\033[32m")
+						fmt.Println("╔══════════════════════════════════════════════════════════════════════╗")
+						fmt.Println("║        ➕ Tambah aktivitas lain untuk tanggal ini? (y/n/x)             ║")
+						fmt.Println("╚══════════════════════════════════════════════════════════════════════╝")
+						fmt.Print("🌿 Jawaban anda ➤ ")
+						fmt.Println("\033[0m")
+						fmt.Scanf("\n%s", &lanjutAktivitas)
+						if lanjutAktivitas == "x" {
+							selesai = true
+							refreshTampilan(*daftar, *jumlah, "")
+						}
+					} else {
+						fmt.Println("⚠️ Kapasitas data sudah penuh.")
+						lanjutAktivitas = "n"
+					}
+				}
+
+				if *jumlah < MaksData && !selesai {
+					fmt.Println("\033[32m")
+					fmt.Println("╔══════════════════════════════════════════════════════════════════════╗")
+					fmt.Println("║        📅 Input aktivitas untuk tanggal lain? (y/n/x)                  ║")
+					fmt.Println("╚══════════════════════════════════════════════════════════════════════╝")
+					fmt.Print("🌿 Jawaban anda ➤ ")
+					fmt.Println("\033[0m")
+					fmt.Scanf("\n%s", &lanjutTanggal)
+					if lanjutTanggal == "x" {
+						selesai = true
+						refreshTampilan(*daftar, *jumlah, "")
+					}
+				}
+			}
 		}
+		selesai = true
+		refreshTampilan(*daftar, *jumlah, "")
 	}
+
 }
 
-func tampilkanAktivitas(daftar [MaksData]Aktivitas, jumlah int) {
+func tampilkanAktivitas(daftar arraktivitas, jumlah int) {
+	var i int
 	fmt.Println("\033[32m")
 	fmt.Println("╔══════╦══════════════╦══════════════════════════════════════════════════════════╦════════════╗")
 	fmt.Println("║  No  ║   Tanggal    ║                          Aktivitas                       ║    Skor    ║")
 	fmt.Println("╠══════╬══════════════╬══════════════════════════════════════════════════════════╬════════════╣")
 
-	for i := 0; i < jumlah; i++ {
+	for i = 0; i < jumlah; i++ {
 		fmt.Printf("║ %2d   ║  %04d/%02d/%02d  ║ %-56s ║    %3d     ║\n",
 			i+1, daftar[i].year, daftar[i].month, daftar[i].day,
 			daftar[i].nama, daftar[i].skorDampak)
@@ -214,21 +277,21 @@ func tampilkanAktivitas(daftar [MaksData]Aktivitas, jumlah int) {
 	fmt.Println("╚══════╩══════════════╩══════════════════════════════════════════════════════════╩════════════╝")
 	fmt.Println("\033[0m")
 }
-
-func tanggal(daftar [MaksData]Aktivitas, i int) int {
+func tanggal(daftar arraktivitas, i int) int {
 	var year, month, day int
 	year = daftar[i].year * 10000
 	month = daftar[i].month * 100
 	day = daftar[i].day
 	return year + month + day
 }
-func months(daftar [MaksData]Aktivitas, i int) int {
+
+func months(daftar arraktivitas, i int) int {
 	var year, month int
 	year = daftar[i].year * 100
 	month = daftar[i].month
 	return year + month
 }
-func tampilkanTanggalUnik(daftar [MaksData]Aktivitas, jumlah int) {
+func tampilkanTanggalUnik(daftar arraktivitas, jumlah int) {
 	var arrdate [MaksData]int
 	var tanggalUnik [MaksData]int
 	var jumlahTanggalUnik int = 0
@@ -260,14 +323,14 @@ func tampilkanTanggalUnik(daftar [MaksData]Aktivitas, jumlah int) {
 	}
 
 	if jumlahTanggalUnik == 0 {
-		fmt.Printf("║ ⚠️  Belum ada aktivitas ║\n")
-		fmt.Printf("║     yang tercatat       ║\n")
+		fmt.Printf("║ %-68s ║\n", "⚠️  Belum ada aktivitas yang tercatat.")
 	} else {
+		// Menampilkan tanggal unik yang ditemukan
 		for i = 0; i < jumlahTanggalUnik; i++ {
-			fmt.Printf("║ 🔹 %02d/%02d/%04d            ║\n",
-				tanggalUnik[i]%100,                   // Hari
-				(tanggalUnik[i]%10000)/100,           // Bulan
-				tanggalUnik[i]/10000)                 // Tahun
+			fmt.Printf("║ 🔹 %d/%d/%d ║\n",
+				(tanggalUnik[i] / 10000),   // Menampilkan Tahun
+				(tanggalUnik[i]%10000)/100, // Menampilkan Bulan
+				tanggalUnik[i]%100)
 		}
 	}
 
@@ -275,12 +338,13 @@ func tampilkanTanggalUnik(daftar [MaksData]Aktivitas, jumlah int) {
 	fmt.Println("\033[0m")
 }
 
-func editAktivitas(daftar *[MaksData]Aktivitas, jumlah int, kategori [10]Kategori) {
+func editAktivitas(daftar *arraktivitas, jumlah int, kategori arrkat) {
+	tampilkanAktivitas(*daftar, jumlah)
+	var selesai bool
 	var year, month, day, tanggaledit int
 	var arrdate [MaksData]int
 	var i, idx int
 
-	// Header
 	fmt.Println("\033[32m")
 	fmt.Println("╔═════════════════════════════════════════╗")
 	fmt.Println("║ ✏️  Ubah Aktivitas Berdasarkan Tanggal   ║")
@@ -288,90 +352,93 @@ func editAktivitas(daftar *[MaksData]Aktivitas, jumlah int, kategori [10]Kategor
 	fmt.Println("\033[0m")
 
 	tampilkanTanggalUnik(*daftar, jumlah)
-
-	// Label input tanggal (kotak dulu, input terpisah)
-	fmt.Println("\033[32m")
-	fmt.Println("╔════════════════════════════════════════╗")
-	fmt.Println("║ 📅 Silakan masukkan tanggal aktivitas  ║")
-	fmt.Println("╚════════════════════════════════════════╝")
-	fmt.Println("\033[0m")
-	fmt.Print("➡️  Tanggal (YYYY/MM/DD): ")
-	fmt.Scanf("\n%d/%d/%d", &year, &month, &day)
-
-	tanggaledit = year*10000 + month*100 + day
-	var indeksAktivitas [MaksData]int
-	var totalDitemukan int = 0
-
-	for i = 0; i < jumlah; i++ {
-		arrdate[i] = tanggal(*daftar, i)
-		if arrdate[i] == tanggaledit {
-			indeksAktivitas[totalDitemukan] = i
-			totalDitemukan++
-		}
-	}
-
-	if totalDitemukan == 0 {
+	fmt.Println("\nKetik x untuk kembali.\n")
+	for !selesai {
 		fmt.Println("\033[32m")
-		fmt.Println("╔════════════════════════════════════════════════════╗")
-		fmt.Println("║ ⚠️  Tidak ada aktivitas ditemukan.                  ║")
-		fmt.Println("╚════════════════════════════════════════════════════╝")
+		fmt.Println("╔════════════════════════════════════════╗")
+		fmt.Println("║ 📅 Silakan masukkan tanggal aktivitas  ║")
+		fmt.Println("╚════════════════════════════════════════╝")
 		fmt.Println("\033[0m")
-	} else {
-		// Daftar aktivitas yang ditemukan (nama dibatasi supaya gak bocor)
-		fmt.Println("\033[32m")
-		fmt.Println("╔══════════════════════════════════════════════════╗")
-		fmt.Println("║ 📋 Daftar aktivitas pada tanggal tersebut:       ║")
-		fmt.Println("║══════════════════════════════════════════════════║")
-		for i = 0; i < totalDitemukan; i++ {
-			idx = indeksAktivitas[i]
-			fmt.Printf("║ %2d. %-30.30s (Skor: %2d)    ║\n", i+1, (*daftar)[idx].nama, (*daftar)[idx].skorDampak)
-		}
-		fmt.Println("╚══════════════════════════════════════════════════╝")
-		fmt.Println("\033[0m")
-
-		var pilihanAktivitas int
-		fmt.Print("📝 Pilih nomor aktivitas yang ingin diedit: ")
-		fmt.Scan(&pilihanAktivitas)
-
-		if pilihanAktivitas >= 1 && pilihanAktivitas <= totalDitemukan {
-			// Label kategori
-			fmt.Println("\033[32m")
-			fmt.Println("╔════════════════════════════════════════════════════╗")
-			fmt.Println("║ 📌 Pilih aktivitas baru dari daftar kategori:      ║")
-			fmt.Println("╚════════════════════════════════════════════════════╝")
-			fmt.Println("\033[0m")
-
-			listKategori(kategori)
-
-			var pilihanKategori int
-			fmt.Print("🌿 Masukkan nomor kategori baru: ")
-			fmt.Scan(&pilihanKategori)
-
-			if pilihanKategori >= 1 && pilihanKategori <= len(kategori) {
-				var idxEdit int = indeksAktivitas[pilihanAktivitas-1]
-				(*daftar)[idxEdit].nama = kategori[pilihanKategori-1].nama
-				(*daftar)[idxEdit].skorDampak = kategori[pilihanKategori-1].skorDampak
-
-				fmt.Println("\033[32m")
-				fmt.Println("╔════════════════════════════════════════════════════╗")
-				fmt.Println("║ ✅ Aktivitas berhasil diedit.                      ║")
-				fmt.Println("╚════════════════════════════════════════════════════╝")
-				fmt.Println("\033[0m")
-			} else {
-				fmt.Println("❌ Pilihan kategori tidak valid.")
-			}
+		fmt.Print("➡️  Tanggal (YYYY/MM/DD): ")
+		var inputTanggal string
+		fmt.Scan(&inputTanggal)
+		if inputTanggal == "x" {
+			selesai = true
+			refreshTampilan(*daftar, jumlah, " ")
 		} else {
-			fmt.Println("❌ Pilihan aktivitas tidak valid.")
+			fmt.Sscanf(inputTanggal, "%d/%d/%d", &year, &month, &day)
+			tanggaledit = year*10000 + month*100 + day
+			var indeksAktivitas [MaksData]int
+			var totalDitemukan int = 0
+
+			for i = 0; i < jumlah; i++ {
+				arrdate[i] = tanggal(*daftar, i)
+				if arrdate[i] == tanggaledit {
+					indeksAktivitas[totalDitemukan] = i
+					totalDitemukan++
+				}
+			}
+
+			if totalDitemukan == 0 {
+				selesai = true
+				refreshTampilan(*daftar, jumlah, "⚠️ Tidak ada aktivitas ditemukan pada tanggal tersebut.")
+			} else {
+				fmt.Println("\033[32m")
+				fmt.Println("╔══════════════════════════════════════════════════╗")
+				fmt.Println("║ 📋 Daftar aktivitas pada tanggal tersebut:       ║")
+				fmt.Println("║══════════════════════════════════════════════════║")
+				for i = 0; i < totalDitemukan; i++ {
+					idx = indeksAktivitas[i]
+					fmt.Printf("║ %2d. %-30.30s (Skor: %2d)    ║\n", i+1, (*daftar)[idx].nama, (*daftar)[idx].skorDampak)
+				}
+				fmt.Println("╚══════════════════════════════════════════════════╝")
+				fmt.Println("\033[0m")
+
+				var pilihanAktivitas int
+				fmt.Print("Pilih nomor aktivitas yang ingin diedit: ")
+				fmt.Scan(&pilihanAktivitas)
+
+				if pilihanAktivitas >= 1 && pilihanAktivitas <= totalDitemukan {
+					fmt.Println("\033[32m")
+					fmt.Println("╔════════════════════════════════════════════════════╗")
+					fmt.Println("║ 📌 Pilih aktivitas baru dari daftar kategori:      ║")
+					fmt.Println("╚════════════════════════════════════════════════════╝")
+					fmt.Println("\033[0m")
+					listKategori(kategori)
+					fmt.Print("🌿 Jawaban anda ➤ ")
+					fmt.Println("\033[0m")
+					var pilihanKategori int
+					fmt.Print("🌿 Masukkan pilihan kategori baru: ")
+					fmt.Scan(&pilihanKategori)
+
+					if pilihanKategori >= 1 && pilihanKategori <= len(kategori) {
+						var idxEdit int = indeksAktivitas[pilihanAktivitas-1]
+						(*daftar)[idxEdit].nama = kategori[pilihanKategori-1].nama
+						(*daftar)[idxEdit].skorDampak = kategori[pilihanKategori-1].skorDampak
+						selesai = true
+						refreshTampilan(*daftar, jumlah, "✅ Aktivitas berhasil diedit.")
+					} else {
+						selesai = true
+						refreshTampilan(*daftar, jumlah, "❌ Pilihan kategori tidak valid.")
+
+					}
+				} else {
+					selesai = true
+					refreshTampilan(*daftar, jumlah, "❌ Pilihan aktivitas tidak valid.")
+				}
+			}
 		}
+
 	}
+
 }
 
-func hapusAktivitas(daftar *[MaksData]Aktivitas, jumlah *int) {
+func hapusAktivitas(daftar *arraktivitas, jumlah *int) {
+	tampilkanAktivitas(*daftar, *jumlah)
+	var selesai bool
 	var year, month, day, tanggalhapus int
 	var arrdate [MaksData]int
-	var i, j int
 
-	// Header
 	fmt.Println("\033[32m")
 	fmt.Println("╔═════════════════════════════════════════╗")
 	fmt.Println("║ ❌ Hapus Aktivitas Berdasarkan Tanggal  ║")
@@ -379,103 +446,106 @@ func hapusAktivitas(daftar *[MaksData]Aktivitas, jumlah *int) {
 	fmt.Println("\033[0m")
 
 	tampilkanTanggalUnik(*daftar, *jumlah)
-
-	// Input tanggal
-	fmt.Println("\033[32m")
-	fmt.Println("╔════════════════════════════════════════════════════╗")
-	fmt.Println("║ 📅 Masukkan tanggal aktivitas yang ingin dihapus   ║")
-	fmt.Println("╚════════════════════════════════════════════════════╝")
-	fmt.Println("\033[0m")
-	fmt.Print("➡️  Tanggal (YYYY/MM/DD): ")
-	fmt.Scanf("\n%d/%d/%d", &year, &month, &day)
-
-	tanggalhapus = year*10000 + month*100 + day
-
-	var indeksAktivitas [MaksData]int
-	var totalDitemukan int = 0
-
-	for i = 0; i < *jumlah; i++ {
-		arrdate[i] = tanggal(*daftar, i)
-		if arrdate[i] == tanggalhapus {
-			indeksAktivitas[totalDitemukan] = i
-			totalDitemukan++
-		}
-	}
-
-	if totalDitemukan == 0 {
+	fmt.Println("Ketik x untuk kembali.")
+	for !selesai {
 		fmt.Println("\033[32m")
 		fmt.Println("╔════════════════════════════════════════════════════╗")
-		fmt.Println("║ ⚠️  Tidak ada aktivitas ditemukan pada tanggal itu ║")
+		fmt.Println("║ 📅 Masukkan tanggal aktivitas yang ingin dihapus   ║")
 		fmt.Println("╚════════════════════════════════════════════════════╝")
 		fmt.Println("\033[0m")
-	} else {
-		// Tampilkan aktivitas yang ditemukan
-		fmt.Println("\033[32m")
-		fmt.Println("╔══════════════════════════════════════════════════╗")
-		fmt.Println("║ 🗑️  Daftar aktivitas pada tanggal tersebut:       ║")
-		fmt.Println("║══════════════════════════════════════════════════║")
-		for i = 0; i < totalDitemukan; i++ {
-			idx := indeksAktivitas[i]
-			fmt.Printf("║ %2d. %-30.30s (Skor: %2d)    ║\n", i+1, (*daftar)[idx].nama, (*daftar)[idx].skorDampak)
-		}
-		fmt.Println("╚══════════════════════════════════════════════════╝")
-		fmt.Println("\033[0m")
-
-		// Input pilihan aktivitas yang akan dihapus
-		var pilihan int
-		fmt.Print("🗂️  Pilih nomor aktivitas yang ingin dihapus: ")
-		fmt.Scan(&pilihan)
-
-		if pilihan >= 1 && pilihan <= totalDitemukan {
-			idx := indeksAktivitas[pilihan-1]
-
-			// Geser data
-			for j = idx; j < *jumlah-1; j++ {
-				(*daftar)[j] = (*daftar)[j+1]
-			}
-			*jumlah--
-
-			fmt.Println("\033[32m")
-			fmt.Println("╔════════════════════════════════════╗")
-			fmt.Println("║ ✅ Aktivitas berhasil dihapus.     ║")
-			fmt.Println("╚════════════════════════════════════╝")
-			fmt.Println("\033[0m")
+		fmt.Print("➡️  Tanggal (YYYY/MM/DD): ")
+		var inputTanggal string
+		fmt.Scan(&inputTanggal)
+		if inputTanggal == "x" {
+			selesai = true
+			refreshTampilan(*daftar, *jumlah, " ")
 		} else {
-			fmt.Println("❌ Pilihan tidak valid.")
+			fmt.Sscanf(inputTanggal, "%d/%d/%d", &year, &month, &day)
+			tanggalhapus = year*10000 + month*100 + day
+			var indeksAktivitas [MaksData]int
+			var totalDitemukan int = 0
+			var i int
+			for i = 0; i < *jumlah; i++ {
+				arrdate[i] = tanggal(*daftar, i)
+				if arrdate[i] == tanggalhapus {
+					indeksAktivitas[totalDitemukan] = i
+					totalDitemukan++
+				}
+			}
+			if totalDitemukan == 0 {
+				fmt.Println("⚠️ Tidak ada aktivitas ditemukan pada tanggal tersebut.")
+			} else {
+				fmt.Println("\033[32m")
+				fmt.Println("╔══════════════════════════════════════════════════╗")
+				fmt.Println("║ 🗑️  Daftar aktivitas pada tanggal tersebut:       ║")
+				fmt.Println("║══════════════════════════════════════════════════║")
+				for i = 0; i < totalDitemukan; i++ {
+					idx := indeksAktivitas[i]
+					fmt.Printf("║ %2d. %-30.30s (Skor: %2d)    ║\n", i+1, (*daftar)[idx].nama, (*daftar)[idx].skorDampak)
+				}
+				fmt.Println("╚══════════════════════════════════════════════════╝")
+				fmt.Println("\033[0m")
+				var pilihanAktivitas int
+				fmt.Print("🗂️  Pilih nomor aktivitas yang ingin dihapus: ")
+				fmt.Scan(&pilihanAktivitas)
+
+				if pilihanAktivitas == 0 {
+					selesai = true
+				}
+
+				if pilihanAktivitas >= 1 && pilihanAktivitas <= totalDitemukan {
+					var idxHapus int = indeksAktivitas[pilihanAktivitas-1]
+					for i = idxHapus; i < *jumlah-1; i++ {
+						(*daftar)[i] = (*daftar)[i+1]
+					}
+					*jumlah--
+					selesai = true
+					refreshTampilan(*daftar, *jumlah, "✅ Aktivitas berhasil dihapus.")
+				} else {
+					selesai = true
+					refreshTampilan(*daftar, *jumlah, "❌ Pilihan aktivitas tidak valid.")
+				}
+			}
 		}
+
 	}
+
 }
 
-func cari(daftar [MaksData]Aktivitas, jumlah int) {
+func cari(daftar arraktivitas, jumlah int) {
+	tampilkanAktivitas(daftar, jumlah)
 	var cari string
-
-	// Header kotak
+	var selesai bool
+	fmt.Println("\n\nKetik x untuk kembali.")
 	fmt.Println("\033[32m")
 	fmt.Println("╔════════════════════════════════════════════════════╗")
 	fmt.Println("║ 🔍 Cari Aktivitas Berdasarkan:                    ║")
 	fmt.Println("╚════════════════════════════════════════════════════╝")
 	fmt.Println("\033[0m")
-
-	fmt.Println("📌 Pilih pencarian berdasarkan:")
-	fmt.Println("   📅 Tanggal (t) atau 🔢 Skor Dampak (d)")
-	fmt.Print("🔍 Pilih (t/d): ")
-	fmt.Scan(&cari)
-
-	for cari != "t" && cari != "d" {
-		fmt.Println("⚠️ Input tidak valid. Coba lagi.")
+	for !selesai {
+		fmt.Println("📌 Pilih pencarian berdasarkan:")
+		fmt.Println("   📅 Tanggal (t) atau 🔢 Skor Dampak (d)")
 		fmt.Print("🔍 Pilih (t/d): ")
 		fmt.Scan(&cari)
-	}
-
-	if cari == "t" {
-		seqAktivitasTanggal(daftar, jumlah)
-	} else if cari == "d" {
-		binarySearchPoin(daftar, jumlah)
+		for cari != "t" && cari != "d" && cari != "x" {
+			fmt.Println("⚠️ Input tidak valid. Coba lagi.")
+			fmt.Print("🔍 Pilih (t/d): ")
+			fmt.Scan(&cari)
+		}
+		if cari == "t" {
+			seqAktivitasTanggal(daftar, jumlah)
+			selesai = true
+		} else if cari == "d" {
+			binarySearchPoin(daftar, jumlah)
+			selesai = true
+		} else if cari == "x" {
+			selesai = true
+			refreshTampilan(daftar, jumlah, " ")
+		}
 	}
 }
 
-
-func seqAktivitasTanggal(daftar [MaksData]Aktivitas, jumlah int) {
+func seqAktivitasTanggal(daftar arraktivitas, jumlah int) {
 	var ditemukan bool = false
 	var i int
 	var year, month, day, tanggalsort int
@@ -485,7 +555,7 @@ func seqAktivitasTanggal(daftar [MaksData]Aktivitas, jumlah int) {
 	fmt.Print("Masukkan kata kunci tanggal (YYYY/MM/DD):  ")
 	fmt.Scanf("\n%d/%d/%d", &year, &month, &day)
 	tanggalsort = year*10000 + month*100 + day
-
+	refreshTampilan(daftar, jumlah, " ")
 	fmt.Println("\nHasil pencarian:")
 	for i = 0; i < jumlah; i++ {
 		arrdate[i] = tanggal(daftar, i)
@@ -495,13 +565,12 @@ func seqAktivitasTanggal(daftar [MaksData]Aktivitas, jumlah int) {
 				daftar[i].year, daftar[i].month, daftar[i].day, daftar[i].nama, daftar[i].skorDampak)
 		}
 	}
-
 	if ditemukan == false {
-		fmt.Println("⚠️ Tidak ditemukan aktivitas yang sesuai.")
+		refreshTampilan(daftar, jumlah, "⚠️ Tidak ditemukan aktivitas yang sesuai.")
 	}
 }
 
-func binarySearchPoin(daftar [MaksData]Aktivitas, jumlah int) {
+func binarySearchPoin(daftar arraktivitas, jumlah int) {
 	var x, left, right, mid, found int
 	fmt.Print("Cari aktivitas berdasarkan skor dampak (6–15): ")
 	fmt.Scan(&x)
@@ -522,8 +591,9 @@ func binarySearchPoin(daftar [MaksData]Aktivitas, jumlah int) {
 	}
 
 	if found == -1 {
-		fmt.Println("⚠️ Skor dampak tidak ditemukan.")
+		refreshTampilan(daftar, jumlah, "⚠️ Skor dampak tidak ditemukan.")
 	} else {
+		refreshTampilan(daftar, jumlah, " ")
 		var i int = 0
 		fmt.Println("✅ Ditemukan aktivitas dengan skor dampak", x, ":")
 		fmt.Printf("- %d/%d/%d | %s | Skor: %d\n",
@@ -540,26 +610,38 @@ func binarySearchPoin(daftar [MaksData]Aktivitas, jumlah int) {
 	}
 }
 
-func sorting(daftar *[MaksData]Aktivitas, jumlah int) {
+func sorting(daftar *arraktivitas, jumlah int) {
+	tampilkanAktivitas(*daftar, jumlah)
+	var selesai bool
 	var sort string
-	fmt.Println("\n\n🔃 Pilih pengurutan berdasarkan:")
-	fmt.Println("    📅 Tanggal (t) , Frekuensi (f), atau 🟢 Skor Dampak (d)")
-	fmt.Print("🔽 Pilih (t/f/d): ")
-	fmt.Scan(&sort)
-	for sort != "t" && sort != "f" && sort != "d" {
-		fmt.Println("⚠️ Input tidak valid. Coba lagi.")
+	fmt.Println("\n\nKetik x untuk kembali.")
+	for !selesai {
+		fmt.Println("🔃 Pilih pengurutan berdasarkan:")
+		fmt.Println("    📅 Tanggal (t) , Frekuensi (f), atau 🟢 Skor Dampak (d)")
 		fmt.Print("🔽 Pilih (t/f/d): ")
 		fmt.Scan(&sort)
+		for sort != "t" && sort != "f" && sort != "d" && sort != "x" {
+			fmt.Println("⚠️ Input tidak valid. Coba lagi.")
+			fmt.Print("🔽 Pilih (t/f/d): ")
+			fmt.Scan(&sort)
+		}
+		if sort == "t" {
+			sortTanggal(daftar, jumlah)
+			selesai = true
+		} else if sort == "f" {
+			sortFrekuensi(daftar, jumlah)
+			selesai = true
+		} else if sort == "d" {
+			sortSkor(daftar, jumlah)
+			selesai = true
+		} else if sort == "x" {
+			selesai = true
+			refreshTampilan(*daftar, jumlah, " ")
+		}
 	}
-	if sort == "t" {
-		sortTanggal(daftar, jumlah)
-	} else if sort == "f" {
-		sortFrekuensi(daftar, jumlah)
-	} else if sort == "d" {
-		sortSkor(daftar, jumlah)
-	}
+
 }
-func sortFrekuensi(daftar *[MaksData]Aktivitas, jumlah int) {
+func sortFrekuensi(daftar *arraktivitas, jumlah int) {
 	var urut string
 	fmt.Println("Pilih daftarkan frekuensi secara decending(d) atau ascending(a)")
 	fmt.Print("Pilih salah satu (d/a):")
@@ -569,10 +651,9 @@ func sortFrekuensi(daftar *[MaksData]Aktivitas, jumlah int) {
 	} else if urut == "a" {
 		sortFrekuensiAscend(daftar, jumlah)
 	}
-	tampilkanAktivitas(*daftar, jumlah)
-	fmt.Println("✅ Aktivitas berhasil didaftarkan berdasarkan frekuensi aktivitas.")
+	refreshTampilan(*daftar, jumlah, "✅ Aktivitas berhasil diurutkan berdasarkan frekuensi aktivitas.")
 }
-func hitungFrekuensi(daftar [MaksData]Aktivitas, jumlah int, nama string) int {
+func hitungFrekuensi(daftar arraktivitas, jumlah int, nama string) int {
 	var count, i int
 	for i = 0; i < jumlah; i++ {
 		if daftar[i].nama == nama {
@@ -581,7 +662,7 @@ func hitungFrekuensi(daftar [MaksData]Aktivitas, jumlah int, nama string) int {
 	}
 	return count
 }
-func sortFrekuensiDescend(daftar *[MaksData]Aktivitas, jumlah int) {
+func sortFrekuensiDescend(daftar *arraktivitas, jumlah int) {
 	var namaUnik [MaksData]string
 	var frekuensi [MaksData]int
 	var jumlahUnik int = 0
@@ -622,7 +703,7 @@ func sortFrekuensiDescend(daftar *[MaksData]Aktivitas, jumlah int) {
 	}
 
 	// 3. Susun daftar baru berdasarkan urutan nama unik
-	var hasil [MaksData]Aktivitas
+	var hasil arraktivitas
 	var idx int = 0
 	for i = 0; i < jumlahUnik; i++ {
 		for j = 0; j < jumlah; j++ {
@@ -639,7 +720,7 @@ func sortFrekuensiDescend(daftar *[MaksData]Aktivitas, jumlah int) {
 	}
 }
 
-func sortFrekuensiAscend(daftar *[MaksData]Aktivitas, jumlah int) {
+func sortFrekuensiAscend(daftar *arraktivitas, jumlah int) {
 	var namaUnik [MaksData]string
 	var frekuensi [MaksData]int
 	var jumlahUnik int = 0
@@ -680,7 +761,7 @@ func sortFrekuensiAscend(daftar *[MaksData]Aktivitas, jumlah int) {
 	}
 
 	// 3. Susun daftar baru berdasarkan urutan nama unik
-	var hasil [MaksData]Aktivitas
+	var hasil arraktivitas
 	var idx int = 0
 	for i = 0; i < jumlahUnik; i++ {
 		for j = 0; j < jumlah; j++ {
@@ -697,7 +778,7 @@ func sortFrekuensiAscend(daftar *[MaksData]Aktivitas, jumlah int) {
 	}
 }
 
-func sortTanggal(daftar *[MaksData]Aktivitas, jumlah int) {
+func sortTanggal(daftar *arraktivitas, jumlah int) {
 	var urut string
 	fmt.Println("Pilih daftarkan tanggal secara decending(d) atau ascending(a)")
 	fmt.Print("Pilih salah satu (d/a):")
@@ -707,10 +788,9 @@ func sortTanggal(daftar *[MaksData]Aktivitas, jumlah int) {
 	} else if urut == "d" {
 		sortTanggalDescend(daftar, jumlah)
 	}
-	tampilkanAktivitas(*daftar, jumlah)
-	fmt.Println("✅ Aktivitas berhasil didaftarkan berdasarkan tanggal.")
+	refreshTampilan(*daftar, jumlah, "✅ Aktivitas berhasil didaftarkan berdasarkan tanggal.")
 }
-func sortTanggalAscend(daftar *[MaksData]Aktivitas, jumlah int) {
+func sortTanggalAscend(daftar *arraktivitas, jumlah int) {
 	var i, j, idx int
 	var temp Aktivitas
 	for i = 0; i < jumlah-1; i++ {
@@ -728,7 +808,7 @@ func sortTanggalAscend(daftar *[MaksData]Aktivitas, jumlah int) {
 	}
 }
 
-func sortTanggalDescend(daftar *[MaksData]Aktivitas, jumlah int) {
+func sortTanggalDescend(daftar *arraktivitas, jumlah int) {
 	var i, j, idx int
 	var temp Aktivitas
 	for i = 0; i < jumlah-1; i++ {
@@ -746,7 +826,7 @@ func sortTanggalDescend(daftar *[MaksData]Aktivitas, jumlah int) {
 	}
 }
 
-func sortSkor(daftar *[MaksData]Aktivitas, jumlah int) {
+func sortSkor(daftar *arraktivitas, jumlah int) {
 	var urut string
 	fmt.Println("Pilih daftarkan tanggal secara decending(d) atau ascending(a)")
 	fmt.Print("Pilih salah satu (d/a):")
@@ -756,10 +836,9 @@ func sortSkor(daftar *[MaksData]Aktivitas, jumlah int) {
 	} else if urut == "d" {
 		sortSkorDescend(daftar, jumlah)
 	}
-	tampilkanAktivitas(*daftar, jumlah)
-	fmt.Println("✅ Aktivitas berhasil didaftarkan berdasarkan skor dampak aktivitas.")
+	refreshTampilan(*daftar, jumlah, "✅ Aktivitas berhasil didaftarkan berdasarkan skor dampak aktivitas.")
 }
-func sortSkorAscend(daftar *[MaksData]Aktivitas, jumlah int) {
+func sortSkorAscend(daftar *arraktivitas, jumlah int) {
 	var i, j int
 	var temp Aktivitas
 	for i = 1; i < jumlah; i++ {
@@ -772,7 +851,7 @@ func sortSkorAscend(daftar *[MaksData]Aktivitas, jumlah int) {
 		(*daftar)[j+1] = temp
 	}
 }
-func sortSkorDescend(daftar *[MaksData]Aktivitas, jumlah int) {
+func sortSkorDescend(daftar *arraktivitas, jumlah int) {
 	var i, j, idx int
 	var temp Aktivitas
 	for i = 0; i < jumlah-1; i++ {
@@ -787,11 +866,13 @@ func sortSkorDescend(daftar *[MaksData]Aktivitas, jumlah int) {
 		(*daftar)[idx] = temp
 	}
 }
-func laporanBulanan(daftar [MaksData]Aktivitas, jumlah int) {
+func laporanBulanan(daftar arraktivitas, jumlah int) {
+	tampilkanAktivitas(daftar, jumlah)
 	sortTanggalAscend(&daftar, jumlah)
 	var i, totalSkor, totalAktivitas int
 	var bulanSekarang, bulanSebelumnya int
 	if jumlah != 0 {
+		refreshTampilan(daftar, jumlah, " ")
 		fmt.Println("\n===== LAPORAN BULANAN =====")
 		for i = 0; i < jumlah; i++ {
 			bulanSekarang = months(daftar, i)
@@ -807,11 +888,13 @@ func laporanBulanan(daftar [MaksData]Aktivitas, jumlah int) {
 		}
 		fmt.Printf("📅 Bulan: %d/%d - Total Aktivitas: %d - Total Skor: %d\n",
 			bulanSebelumnya/100, bulanSebelumnya%100, totalAktivitas, totalSkor)
+
 	} else {
-		fmt.Println("⚠️ Belum ada aktivitas untuk dihitung.")
+		refreshTampilan(daftar, jumlah, "⚠️ Belum ada aktivitas untuk dihitung.")
 	}
+
 }
-func dummyData(daftar *[MaksData]Aktivitas, jumlah *int) {
+func dummyData(daftar *arraktivitas, jumlah *int) {
 	daftar[*jumlah] = Aktivitas{2025, 5, 21, "Membuang sampah pada tempatnya", 6}
 	*jumlah++
 	daftar[*jumlah] = Aktivitas{2025, 5, 21, "Menanam pohon", 15}
